@@ -1,5 +1,7 @@
 package servicio;
 
+import excepciones.CredencialesInvalidasException;
+import excepciones.UsuarioDuplicadoException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,31 +16,41 @@ public class GestorUsuarios {
         this.usuarios = new ArrayList<>();
     }
 
-    public boolean registrarUsuario(Usuario usuario) {
+    public boolean registrarUsuario(Usuario usuario)
+            throws UsuarioDuplicadoException {
+
         if (usuario == null) {
             throw new IllegalArgumentException("El usuario no puede ser nulo.");
         }
 
         if (buscarPorCorreo(usuario.getCorreo()).isPresent()) {
-            throw new IllegalArgumentException(
-                    "Ya existe un usuario registrado con el correo " + usuario.getCorreo() + "."
+            throw new UsuarioDuplicadoException(
+                    "Ya existe un usuario registrado con el correo "
+                    + usuario.getCorreo() + "."
             );
         }
 
         return usuarios.add(usuario);
     }
 
-    public Usuario iniciarSesion(String correo, String contrasena) {
+    public Usuario iniciarSesion(String correo, String contrasena)
+            throws CredencialesInvalidasException {
+
         if (correo == null || correo.isBlank()
                 || contrasena == null || contrasena.isBlank()) {
-            throw new IllegalArgumentException("Debe ingresar correo y contraseña.");
+            throw new CredencialesInvalidasException(
+                    "Debe ingresar correo y contraseña."
+            );
         }
 
         return usuarios.stream()
                 .filter(usuario -> usuario.autenticar(correo.trim(), contrasena))
                 .findFirst()
                 .orElseThrow(() ->
-                        new IllegalArgumentException("Correo o contraseña incorrectos."));
+                        new CredencialesInvalidasException(
+                                "Correo o contraseña incorrectos."
+                        )
+                );
     }
 
     public Optional<Usuario> buscarPorCorreo(String correo) {
@@ -47,7 +59,8 @@ public class GestorUsuarios {
         }
 
         return usuarios.stream()
-                .filter(usuario -> usuario.getCorreo().equalsIgnoreCase(correo.trim()))
+                .filter(usuario ->
+                        usuario.getCorreo().equalsIgnoreCase(correo.trim()))
                 .findFirst();
     }
 
@@ -60,7 +73,10 @@ public class GestorUsuarios {
     public boolean cambiarEstadoUsuario(int idUsuario, boolean activo) {
         Usuario usuario = buscarPorId(idUsuario)
                 .orElseThrow(() ->
-                        new IllegalArgumentException("No se encontró el usuario indicado."));
+                        new IllegalArgumentException(
+                                "No se encontró el usuario indicado."
+                        )
+                );
 
         usuario.setActivo(activo);
         return true;

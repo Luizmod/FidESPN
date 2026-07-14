@@ -1,5 +1,6 @@
 package servicio;
 
+import excepciones.DatosInvalidosException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,28 +17,35 @@ public class GestorJornadas {
         this.jornadas = new ArrayList<>();
     }
 
-    public boolean registrarJornada(Jornada jornada) {
+    public boolean registrarJornada(Jornada jornada)
+            throws DatosInvalidosException {
+
         if (jornada == null) {
-            throw new IllegalArgumentException("La jornada no puede ser nula.");
+            throw new DatosInvalidosException(
+                    "La jornada no puede ser nula."
+            );
         }
 
         boolean idDuplicado = jornadas.stream()
-                .anyMatch(j -> j.getIdJornada() == jornada.getIdJornada());
+                .anyMatch(j ->
+                        j.getIdJornada() == jornada.getIdJornada()
+                );
 
         if (idDuplicado) {
-            throw new IllegalArgumentException(
+            throw new DatosInvalidosException(
                     "Ya existe una jornada con el mismo identificador."
             );
         }
 
         boolean fechasSuperpuestas = jornadas.stream().anyMatch(j ->
                 !jornada.getFechaFin().isBefore(j.getFechaInicio())
-                        && !jornada.getFechaInicio().isAfter(j.getFechaFin())
+                && !jornada.getFechaInicio().isAfter(j.getFechaFin())
         );
 
         if (fechasSuperpuestas) {
-            throw new IllegalArgumentException(
-                    "Las fechas de la jornada se superponen con otra jornada registrada."
+            throw new DatosInvalidosException(
+                    "Las fechas de la jornada se superponen "
+                    + "con otra jornada registrada."
             );
         }
 
@@ -46,21 +54,25 @@ public class GestorJornadas {
 
     public Optional<Jornada> buscarPorId(int idJornada) {
         return jornadas.stream()
-                .filter(jornada -> jornada.getIdJornada() == idJornada)
+                .filter(jornada ->
+                        jornada.getIdJornada() == idJornada)
                 .findFirst();
     }
 
     public Optional<Jornada> buscarJornadaActiva(LocalDate fecha) {
-        LocalDate fechaEvaluada = fecha == null ? LocalDate.now() : fecha;
+        LocalDate fechaEvaluada =
+                fecha == null ? LocalDate.now() : fecha;
 
         return jornadas.stream()
-                .filter(jornada -> jornada.estaActiva(fechaEvaluada))
+                .filter(jornada ->
+                        jornada.estaActiva(fechaEvaluada))
                 .findFirst();
     }
 
     public List<Jornada> listarOrdenadasPorFecha() {
         return jornadas.stream()
-                .sorted(Comparator.comparing(Jornada::getFechaInicio))
+                .sorted(Comparator.comparing(
+                        Jornada::getFechaInicio))
                 .toList();
     }
 

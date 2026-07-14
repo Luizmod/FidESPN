@@ -2,7 +2,8 @@ package servicio;
 
 public final class ContextoAplicacion {
 
-    private static final ContextoAplicacion INSTANCIA = new ContextoAplicacion();
+    private static final ContextoAplicacion INSTANCIA =
+            new ContextoAplicacion();
 
     private final GestorUsuarios gestorUsuarios;
     private final GestorEquipos gestorEquipos;

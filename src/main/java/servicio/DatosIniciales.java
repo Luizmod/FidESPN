@@ -1,5 +1,11 @@
 package servicio;
 
+import excepciones.CorresponsalNoDisponibleException;
+import excepciones.DatosInvalidosException;
+import excepciones.EquipoDuplicadoException;
+import excepciones.NumeroCamisetaDuplicadoException;
+import excepciones.PartidoInvalidoException;
+import excepciones.UsuarioDuplicadoException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import modelo.Administrador;
@@ -15,7 +21,14 @@ public final class DatosIniciales {
     private DatosIniciales() {
     }
 
-    public static void cargar(ContextoAplicacion contexto) {
+    public static void cargar(ContextoAplicacion contexto)
+            throws UsuarioDuplicadoException,
+                   EquipoDuplicadoException,
+                   NumeroCamisetaDuplicadoException,
+                   DatosInvalidosException,
+                   PartidoInvalidoException,
+                   CorresponsalNoDisponibleException {
+
         GestorUsuarios usuarios = contexto.getGestorUsuarios();
         GestorEquipos equipos = contexto.getGestorEquipos();
         GestorJornadas jornadas = contexto.getGestorJornadas();
@@ -43,8 +56,11 @@ public final class DatosIniciales {
         usuarios.registrarUsuario(administrador);
         usuarios.registrarUsuario(corresponsal);
 
-        Equipo argentina = new Equipo(1, "Argentina", "Argentina", "C");
-        Equipo mexico = new Equipo(2, "Mexico", "Mexico", "C");
+        Equipo argentina =
+                new Equipo(1, "Argentina", "Argentina", "C");
+
+        Equipo mexico =
+                new Equipo(2, "Mexico", "Mexico", "C");
 
         equipos.registrarEquipo(argentina);
         equipos.registrarEquipo(mexico);
@@ -58,7 +74,10 @@ public final class DatosIniciales {
                 true
         );
 
-        equipos.registrarJugador(argentina.getIdEquipo(), jugador);
+        equipos.registrarJugador(
+                argentina.getIdEquipo(),
+                jugador
+        );
 
         Jornada jornada = new Jornada(
                 1,
@@ -79,6 +98,10 @@ public final class DatosIniciales {
         );
 
         partidos.registrarPartido(partido);
-        partidos.asignarCorresponsal(partido.getIdPartido(), corresponsal);
+
+        partidos.asignarCorresponsal(
+                partido.getIdPartido(),
+                corresponsal
+        );
     }
 }

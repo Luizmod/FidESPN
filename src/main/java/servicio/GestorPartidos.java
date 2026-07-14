@@ -1,5 +1,7 @@
 package servicio;
 
+import excepciones.CorresponsalNoDisponibleException;
+import excepciones.PartidoInvalidoException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Collections;
@@ -20,42 +22,51 @@ public class GestorPartidos {
         this.partidos = new ArrayList<>();
     }
 
-    public boolean registrarPartido(Partido partido) {
+    public boolean registrarPartido(Partido partido)
+            throws PartidoInvalidoException {
+
         if (partido == null) {
-            throw new IllegalArgumentException("El partido no puede ser nulo.");
+            throw new PartidoInvalidoException(
+                    "El partido no puede ser nulo."
+            );
         }
 
-        if (partido.getEquipoLocal().equals(partido.getEquipoVisitante())) {
-            throw new IllegalArgumentException(
+        if (partido.getEquipoLocal()
+                .equals(partido.getEquipoVisitante())) {
+            throw new PartidoInvalidoException(
                     "El equipo local y el visitante deben ser diferentes."
             );
         }
 
         boolean idDuplicado = partidos.stream()
-                .anyMatch(p -> p.getIdPartido() == partido.getIdPartido());
+                .anyMatch(p ->
+                        p.getIdPartido() == partido.getIdPartido()
+                );
 
         if (idDuplicado) {
-            throw new IllegalArgumentException(
+            throw new PartidoInvalidoException(
                     "Ya existe un partido con el mismo identificador."
             );
         }
 
         boolean choqueHorario = partidos.stream().anyMatch(p ->
                 p.getFecha().equals(partido.getFecha())
-                        && p.getHora().equals(partido.getHora())
-                        && comparteEquipo(p, partido)
+                && p.getHora().equals(partido.getHora())
+                && comparteEquipo(p, partido)
         );
 
         if (choqueHorario) {
-            throw new IllegalArgumentException(
-                    "Uno de los equipos ya tiene un partido programado en ese horario."
+            throw new PartidoInvalidoException(
+                    "Uno de los equipos ya tiene un partido "
+                    + "programado en ese horario."
             );
         }
 
         partidos.add(partido);
 
         Jornada jornada = partido.getJornada();
-        if (jornada != null && !jornada.obtenerPartidos().contains(partido)) {
+        if (jornada != null
+                && !jornada.obtenerPartidos().contains(partido)) {
             jornada.agregarPartido(partido);
         }
 
@@ -74,39 +85,60 @@ public class GestorPartidos {
                 || visitante1.equals(visitante2);
     }
 
-    public boolean asignarCorresponsal(int idPartido, Corresponsal corresponsal) {
+    public boolean asignarCorresponsal(
+            int idPartido,
+            Corresponsal corresponsal
+    ) throws CorresponsalNoDisponibleException {
+
         if (corresponsal == null) {
-            throw new IllegalArgumentException("El corresponsal no puede ser nulo.");
+            throw new CorresponsalNoDisponibleException(
+                    "El corresponsal no puede ser nulo."
+            );
         }
 
         if (!corresponsal.isActivo()) {
-            throw new IllegalArgumentException("El corresponsal debe estar activo.");
+            throw new CorresponsalNoDisponibleException(
+                    "El corresponsal debe estar activo."
+            );
         }
 
         Partido partido = buscarPorId(idPartido)
                 .orElseThrow(() ->
-                        new IllegalArgumentException("No se encontró el partido indicado."));
+                        new CorresponsalNoDisponibleException(
+                                "No se encontró el partido indicado."
+                        )
+                );
 
         if (partido.getEstado() != EstadoPartido.PROGRAMADO) {
-            throw new IllegalStateException(
-                    "Solo se puede asignar o cambiar el corresponsal de un partido programado."
+            throw new CorresponsalNoDisponibleException(
+                    "Solo se puede asignar o cambiar el corresponsal "
+                    + "de un partido programado."
             );
         }
 
         return corresponsal.asignarPartido(partido);
     }
 
-    public boolean registrarEvento(int idPartido, EventoPartido evento) {
+    public boolean registrarEvento(
+            int idPartido,
+            EventoPartido evento
+    ) throws PartidoInvalidoException {
+
         Partido partido = buscarPorId(idPartido)
                 .orElseThrow(() ->
-                        new IllegalArgumentException("No se encontró el partido indicado."));
+                        new PartidoInvalidoException(
+                                "No se encontró el partido indicado."
+                        )
+                );
 
         if (evento == null) {
-            throw new IllegalArgumentException("El evento no puede ser nulo.");
+            throw new PartidoInvalidoException(
+                    "El evento no puede ser nulo."
+            );
         }
 
         if (!evento.getPartido().equals(partido)) {
-            throw new IllegalArgumentException(
+            throw new PartidoInvalidoException(
                     "El evento no pertenece al partido seleccionado."
             );
         }
@@ -117,29 +149,39 @@ public class GestorPartidos {
 
     public Optional<Partido> buscarPorId(int idPartido) {
         return partidos.stream()
-                .filter(partido -> partido.getIdPartido() == idPartido)
+                .filter(partido ->
+                        partido.getIdPartido() == idPartido)
                 .findFirst();
     }
 
-    public List<Partido> listarPorCorresponsal(Corresponsal corresponsal) {
+    public List<Partido> listarPorCorresponsal(
+            Corresponsal corresponsal
+    ) {
         if (corresponsal == null) {
             return List.of();
         }
 
         return partidos.stream()
-                .filter(partido -> corresponsal.equals(partido.getCorresponsal()))
-                .sorted(Comparator.comparing(Partido::getFecha)
-                        .thenComparing(Partido::getHora))
+                .filter(partido ->
+                        corresponsal.equals(
+                                partido.getCorresponsal()))
+                .sorted(
+                        Comparator.comparing(Partido::getFecha)
+                                .thenComparing(Partido::getHora)
+                )
                 .toList();
     }
 
-    public List<Partido> listarPorEstado(EstadoPartido estado) {
+    public List<Partido> listarPorEstado(
+            EstadoPartido estado
+    ) {
         if (estado == null) {
             return List.of();
         }
 
         return partidos.stream()
-                .filter(partido -> partido.getEstado() == estado)
+                .filter(partido ->
+                        partido.getEstado() == estado)
                 .toList();
     }
 
