@@ -100,8 +100,9 @@ public class FrmDashboardAdministrador extends JFrame {
                 () -> new FrmListaPartidos(contexto).setVisible(true)
         ));
 
-        JPanel acciones = new JPanel(new GridLayout(1, 4, 12, 12));
-        acciones.setOpaque(false);
+        JPanel acciones = new JPanel(
+        new GridLayout(2, 3, 12, 12)
+        );
 
         JButton btnRegistrarEquipo = crearBoton("Registrar equipo");
         btnRegistrarEquipo.addActionListener(e ->
@@ -112,6 +113,15 @@ public class FrmDashboardAdministrador extends JFrame {
         btnRegistrarJugador.addActionListener(e ->
                 new FrmRegistrarJugador(contexto).setVisible(true)
         );
+        
+        JButton btnAsignarCorresponsal =
+        crearBoton("Asignar corresponsal");
+
+        btnAsignarCorresponsal.addActionListener(e ->
+        new FrmAsignarCorresponsal(contexto).setVisible(true)
+        );
+
+        acciones.add(btnAsignarCorresponsal);
 
         JButton btnCrearJornada = crearBoton("Crear jornada");
         btnCrearJornada.addActionListener(e ->
