@@ -1,9 +1,12 @@
 package vista;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -72,25 +75,29 @@ public class FrmDashboardAdministrador extends JFrame {
         tarjetas.add(crearTarjeta(
                 "Usuarios",
                 String.valueOf(contexto.getGestorUsuarios().obtenerCantidadUsuarios()),
-                "Usuarios registrados"
+                "Usuarios registrados",
+                () -> new FrmListaUsuarios(contexto).setVisible(true)
         ));
 
         tarjetas.add(crearTarjeta(
                 "Equipos",
                 String.valueOf(contexto.getGestorEquipos().obtenerCantidadEquipos()),
-                "Selecciones registradas"
+                "Selecciones registradas",
+                () -> new FrmListaEquipos(contexto).setVisible(true)
         ));
 
         tarjetas.add(crearTarjeta(
                 "Jornadas",
                 String.valueOf(contexto.getGestorJornadas().obtenerCantidadJornadas()),
-                "Jornadas disponibles"
+                "Jornadas disponibles",
+                () -> new FrmListaJornadas(contexto).setVisible(true)
         ));
 
         tarjetas.add(crearTarjeta(
                 "Partidos",
                 String.valueOf(contexto.getGestorPartidos().obtenerCantidadPartidos()),
-                "Partidos programados"
+                "Partidos programados",
+                () -> new FrmListaPartidos(contexto).setVisible(true)
         ));
 
         JPanel acciones = new JPanel(new GridLayout(1, 4, 12, 12));
@@ -111,10 +118,15 @@ public class FrmDashboardAdministrador extends JFrame {
                 new FrmCrearJornada(contexto).setVisible(true)
         );
 
+        JButton btnCrearPartido = crearBoton("Crear partido");
+        btnCrearPartido.addActionListener(e ->
+                new FrmCrearPartido(contexto).setVisible(true)
+        );
+
         acciones.add(btnRegistrarEquipo);
         acciones.add(btnRegistrarJugador);
         acciones.add(btnCrearJornada);
-        acciones.add(crearBotonPendiente("Crear partido"));
+        acciones.add(btnCrearPartido);
 
         contenido.add(lblTitulo, BorderLayout.NORTH);
         contenido.add(tarjetas, BorderLayout.CENTER);
@@ -127,13 +139,14 @@ public class FrmDashboardAdministrador extends JFrame {
         pack();
     }
 
-    private JPanel crearTarjeta(String titulo, String valor, String descripcion) {
+    private JPanel crearTarjeta(String titulo, String valor, String descripcion, Runnable alHacerClic) {
         JPanel tarjeta = new JPanel(new BorderLayout(8, 8));
         tarjeta.setBackground(PaletaColores.BLANCO);
         tarjeta.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(PaletaColores.BORDE_TARJETA),
                 BorderFactory.createEmptyBorder(22, 22, 22, 22)
         ));
+        tarjeta.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         JLabel lblTitulo = new JLabel(titulo);
         lblTitulo.setFont(new Font("SansSerif", Font.BOLD, 16));
@@ -150,6 +163,29 @@ public class FrmDashboardAdministrador extends JFrame {
         tarjeta.add(lblValor, BorderLayout.CENTER);
         tarjeta.add(lblDescripcion, BorderLayout.SOUTH);
 
+        tarjeta.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                alHacerClic.run();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                tarjeta.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(PaletaColores.VERDE_CESPED, 2),
+                        BorderFactory.createEmptyBorder(21, 21, 21, 21)
+                ));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                tarjeta.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(PaletaColores.BORDE_TARJETA),
+                        BorderFactory.createEmptyBorder(22, 22, 22, 22)
+                ));
+            }
+        });
+
         return tarjeta;
     }
 
@@ -160,20 +196,6 @@ public class FrmDashboardAdministrador extends JFrame {
         boton.setFocusPainted(false);
         boton.setFont(new Font("SansSerif", Font.BOLD, 13));
         boton.setPreferredSize(new Dimension(150, 42));
-        return boton;
-    }
-
-    private JButton crearBotonPendiente(String texto) {
-        JButton boton = crearBoton(texto);
-        boton.setBackground(PaletaColores.VERDE_MEDIO);
-        boton.addActionListener(e ->
-                javax.swing.JOptionPane.showMessageDialog(
-                        this,
-                        "Esta función se implementará en el siguiente formulario.",
-                        texto,
-                        javax.swing.JOptionPane.INFORMATION_MESSAGE
-                )
-        );
         return boton;
     }
 }
