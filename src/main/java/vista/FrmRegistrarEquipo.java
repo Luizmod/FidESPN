@@ -29,7 +29,6 @@ public class FrmRegistrarEquipo extends JFrame {
 
     private final ContextoAplicacion contexto;
 
-    private JTextField txtNombre;
     private JTextField txtPais;
     private JTextField txtEscudo;
     private JComboBox<String> cmbGrupo;
@@ -103,14 +102,7 @@ public class FrmRegistrarEquipo extends JFrame {
         int fila = 0;
 
         gbc.gridy = fila++;
-        tarjeta.add(crearEtiqueta("Nombre del equipo"), gbc);
-
-        gbc.gridy = fila++;
-        txtNombre = crearCampoTexto();
-        tarjeta.add(txtNombre, gbc);
-
-        gbc.gridy = fila++;
-        tarjeta.add(crearEtiqueta("País"), gbc);
+        tarjeta.add(crearEtiqueta("Selección nacional (país)"), gbc);
 
         gbc.gridy = fila++;
         txtPais = crearCampoTexto();
@@ -185,24 +177,24 @@ public class FrmRegistrarEquipo extends JFrame {
     }
 
     private void guardarEquipo() {
-        String nombre = txtNombre.getText().trim();
         String pais = txtPais.getText().trim();
         String escudo = txtEscudo.getText().trim();
         String grupo = (String) cmbGrupo.getSelectedItem();
 
-        if (nombre.isEmpty() || pais.isEmpty()) {
-            mostrarError("El nombre y el país son obligatorios.");
+        if (pais.isEmpty()) {
+            mostrarError("La selección nacional es obligatoria.");
             return;
         }
 
         try {
             int nuevoId = generarSiguienteId();
-            Equipo equipo = new Equipo(nuevoId, nombre, pais, escudo, grupo);
+            // En un mundial el nombre del equipo y el país son el mismo dato.
+            Equipo equipo = new Equipo(nuevoId, pais, pais, escudo, grupo);
             contexto.getGestorEquipos().registrarEquipo(equipo);
 
             JOptionPane.showMessageDialog(
                     this,
-                    "El equipo \"" + nombre + "\" se registró correctamente.",
+                    "La selección \"" + pais + "\" se registró correctamente.",
                     "Equipo registrado",
                     JOptionPane.INFORMATION_MESSAGE
             );
@@ -225,11 +217,10 @@ public class FrmRegistrarEquipo extends JFrame {
     }
 
     private void limpiarFormulario() {
-        txtNombre.setText("");
         txtPais.setText("");
         txtEscudo.setText("");
         cmbGrupo.setSelectedIndex(0);
-        txtNombre.requestFocus();
+        txtPais.requestFocus();
     }
 
     private void mostrarError(String mensaje) {

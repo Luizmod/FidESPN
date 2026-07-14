@@ -106,9 +106,14 @@ public class FrmDashboardAdministrador extends JFrame {
                 new FrmRegistrarJugador(contexto).setVisible(true)
         );
 
+        JButton btnCrearJornada = crearBoton("Crear jornada");
+        btnCrearJornada.addActionListener(e ->
+                new FrmCrearJornada(contexto).setVisible(true)
+        );
+
         acciones.add(btnRegistrarEquipo);
         acciones.add(btnRegistrarJugador);
-        acciones.add(crearBotonPendiente("Crear jornada"));
+        acciones.add(btnCrearJornada);
         acciones.add(crearBotonPendiente("Crear partido"));
 
         contenido.add(lblTitulo, BorderLayout.NORTH);

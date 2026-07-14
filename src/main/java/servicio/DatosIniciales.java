@@ -38,8 +38,8 @@ public final class DatosIniciales {
                 1,
                 "Luis",
                 "Castro",
-                "admin@fidespn.com",
-                "Admin123",
+                "admin",
+                "admin",
                 true
         );
 

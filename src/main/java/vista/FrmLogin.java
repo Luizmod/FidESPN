@@ -46,18 +46,18 @@ public class FrmLogin extends JFrame {
 
     private void construirInterfaz() {
         JPanel panelPrincipal = new JPanel(new BorderLayout());
-        panelPrincipal.setBackground(new Color(245, 247, 250));
+        panelPrincipal.setBackground(PaletaColores.FONDO_VENTANA);
 
         JPanel encabezado = new JPanel(new BorderLayout());
-        encabezado.setBackground(new Color(15, 39, 71));
+        encabezado.setBackground(PaletaColores.VERDE_OSCURO);
         encabezado.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
         JLabel lblMarca = new JLabel("FidESPN");
-        lblMarca.setForeground(Color.WHITE);
+        lblMarca.setForeground(PaletaColores.BLANCO);
         lblMarca.setFont(new Font("SansSerif", Font.BOLD, 28));
 
         JLabel lblSubtitulo = new JLabel("Seguimiento del mundial en tiempo real");
-        lblSubtitulo.setForeground(new Color(205, 220, 235));
+        lblSubtitulo.setForeground(new Color(0xD4, 0xE8, 0xD0));
         lblSubtitulo.setFont(new Font("SansSerif", Font.PLAIN, 14));
 
         encabezado.add(lblMarca, BorderLayout.WEST);
@@ -67,9 +67,9 @@ public class FrmLogin extends JFrame {
         contenedor.setOpaque(false);
 
         JPanel tarjeta = new JPanel(new GridBagLayout());
-        tarjeta.setBackground(Color.WHITE);
+        tarjeta.setBackground(PaletaColores.BLANCO);
         tarjeta.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(215, 220, 228)),
+                BorderFactory.createLineBorder(PaletaColores.BORDE_TARJETA),
                 BorderFactory.createEmptyBorder(35, 45, 35, 45)
         ));
 
@@ -81,7 +81,7 @@ public class FrmLogin extends JFrame {
 
         JLabel lblTitulo = new JLabel("Iniciar sesión", SwingConstants.CENTER);
         lblTitulo.setFont(new Font("SansSerif", Font.BOLD, 24));
-        lblTitulo.setForeground(new Color(15, 39, 71));
+        lblTitulo.setForeground(PaletaColores.VERDE_OSCURO);
 
         JLabel lblCorreo = new JLabel("Correo electrónico");
         lblCorreo.setFont(new Font("SansSerif", Font.BOLD, 13));
@@ -98,8 +98,8 @@ public class FrmLogin extends JFrame {
         txtContrasena.setPreferredSize(new Dimension(320, 38));
 
         btnIniciarSesion = new JButton("Iniciar sesión");
-        btnIniciarSesion.setBackground(new Color(26, 99, 178));
-        btnIniciarSesion.setForeground(Color.WHITE);
+        btnIniciarSesion.setBackground(PaletaColores.VERDE_CESPED);
+        btnIniciarSesion.setForeground(PaletaColores.BLANCO);
         btnIniciarSesion.setFocusPainted(false);
         btnIniciarSesion.setFont(new Font("SansSerif", Font.BOLD, 14));
         btnIniciarSesion.setPreferredSize(new Dimension(320, 42));
@@ -107,10 +107,10 @@ public class FrmLogin extends JFrame {
 
         JLabel lblAyuda = new JLabel(
                 "<html><center>Usuario de prueba:<br>"
-                + "admin@fidespn.com / Admin123</center></html>",
+                + "admin / admin</center></html>",
                 SwingConstants.CENTER
         );
-        lblAyuda.setForeground(new Color(95, 105, 120));
+        lblAyuda.setForeground(PaletaColores.TEXTO_SECUNDARIO);
         lblAyuda.setFont(new Font("SansSerif", Font.PLAIN, 12));
 
         gbc.gridy = 0;
