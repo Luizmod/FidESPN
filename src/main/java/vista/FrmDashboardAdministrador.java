@@ -1,7 +1,6 @@
 package vista;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -39,21 +38,21 @@ public class FrmDashboardAdministrador extends JFrame {
 
     private void construirInterfaz() {
         JPanel principal = new JPanel(new BorderLayout());
-        principal.setBackground(new Color(245, 247, 250));
+        principal.setBackground(PaletaColores.FONDO_VENTANA);
 
         JPanel encabezado = new JPanel(new BorderLayout());
-        encabezado.setBackground(new Color(15, 39, 71));
+        encabezado.setBackground(PaletaColores.VERDE_OSCURO);
         encabezado.setBorder(BorderFactory.createEmptyBorder(18, 25, 18, 25));
 
         JLabel lblMarca = new JLabel("FidESPN");
-        lblMarca.setForeground(Color.WHITE);
+        lblMarca.setForeground(PaletaColores.BLANCO);
         lblMarca.setFont(new Font("SansSerif", Font.BOLD, 26));
 
         JLabel lblUsuario = new JLabel(
                 "Administrador: " + administrador.getNombre()
                 + " " + administrador.getApellido()
         );
-        lblUsuario.setForeground(Color.WHITE);
+        lblUsuario.setForeground(PaletaColores.BLANCO);
         lblUsuario.setFont(new Font("SansSerif", Font.PLAIN, 14));
 
         encabezado.add(lblMarca, BorderLayout.WEST);
@@ -65,7 +64,7 @@ public class FrmDashboardAdministrador extends JFrame {
 
         JLabel lblTitulo = new JLabel("Dashboard del administrador");
         lblTitulo.setFont(new Font("SansSerif", Font.BOLD, 24));
-        lblTitulo.setForeground(new Color(15, 39, 71));
+        lblTitulo.setForeground(PaletaColores.VERDE_OSCURO);
 
         JPanel tarjetas = new JPanel(new GridLayout(2, 2, 20, 20));
         tarjetas.setOpaque(false);
@@ -97,8 +96,18 @@ public class FrmDashboardAdministrador extends JFrame {
         JPanel acciones = new JPanel(new GridLayout(1, 4, 12, 12));
         acciones.setOpaque(false);
 
-        acciones.add(crearBotonPendiente("Registrar equipo"));
-        acciones.add(crearBotonPendiente("Registrar jugador"));
+        JButton btnRegistrarEquipo = crearBoton("Registrar equipo");
+        btnRegistrarEquipo.addActionListener(e ->
+                new FrmRegistrarEquipo(contexto).setVisible(true)
+        );
+
+        JButton btnRegistrarJugador = crearBoton("Registrar jugador");
+        btnRegistrarJugador.addActionListener(e ->
+                new FrmRegistrarJugador(contexto).setVisible(true)
+        );
+
+        acciones.add(btnRegistrarEquipo);
+        acciones.add(btnRegistrarJugador);
         acciones.add(crearBotonPendiente("Crear jornada"));
         acciones.add(crearBotonPendiente("Crear partido"));
 
@@ -115,22 +124,22 @@ public class FrmDashboardAdministrador extends JFrame {
 
     private JPanel crearTarjeta(String titulo, String valor, String descripcion) {
         JPanel tarjeta = new JPanel(new BorderLayout(8, 8));
-        tarjeta.setBackground(Color.WHITE);
+        tarjeta.setBackground(PaletaColores.BLANCO);
         tarjeta.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(215, 220, 228)),
+                BorderFactory.createLineBorder(PaletaColores.BORDE_TARJETA),
                 BorderFactory.createEmptyBorder(22, 22, 22, 22)
         ));
 
         JLabel lblTitulo = new JLabel(titulo);
         lblTitulo.setFont(new Font("SansSerif", Font.BOLD, 16));
-        lblTitulo.setForeground(new Color(15, 39, 71));
+        lblTitulo.setForeground(PaletaColores.VERDE_OSCURO);
 
         JLabel lblValor = new JLabel(valor, SwingConstants.CENTER);
         lblValor.setFont(new Font("SansSerif", Font.BOLD, 42));
-        lblValor.setForeground(new Color(26, 99, 178));
+        lblValor.setForeground(PaletaColores.VERDE_CESPED);
 
         JLabel lblDescripcion = new JLabel(descripcion, SwingConstants.CENTER);
-        lblDescripcion.setForeground(new Color(95, 105, 120));
+        lblDescripcion.setForeground(PaletaColores.TEXTO_SECUNDARIO);
 
         tarjeta.add(lblTitulo, BorderLayout.NORTH);
         tarjeta.add(lblValor, BorderLayout.CENTER);
@@ -139,13 +148,19 @@ public class FrmDashboardAdministrador extends JFrame {
         return tarjeta;
     }
 
-    private JButton crearBotonPendiente(String texto) {
+    private JButton crearBoton(String texto) {
         JButton boton = new JButton(texto);
-        boton.setBackground(new Color(26, 99, 178));
-        boton.setForeground(Color.WHITE);
+        boton.setBackground(PaletaColores.VERDE_CESPED);
+        boton.setForeground(PaletaColores.BLANCO);
         boton.setFocusPainted(false);
         boton.setFont(new Font("SansSerif", Font.BOLD, 13));
         boton.setPreferredSize(new Dimension(150, 42));
+        return boton;
+    }
+
+    private JButton crearBotonPendiente(String texto) {
+        JButton boton = crearBoton(texto);
+        boton.setBackground(PaletaColores.VERDE_MEDIO);
         boton.addActionListener(e ->
                 javax.swing.JOptionPane.showMessageDialog(
                         this,
