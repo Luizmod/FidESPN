@@ -50,13 +50,17 @@ public class FrmLogin extends JFrame {
 
         JPanel encabezado = new JPanel(new BorderLayout());
         encabezado.setBackground(PaletaColores.VERDE_OSCURO);
-        encabezado.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
+        encabezado.setBorder(
+                BorderFactory.createEmptyBorder(20, 30, 20, 30)
+        );
 
         JLabel lblMarca = new JLabel("FidESPN");
         lblMarca.setForeground(PaletaColores.BLANCO);
         lblMarca.setFont(new Font("SansSerif", Font.BOLD, 28));
 
-        JLabel lblSubtitulo = new JLabel("Seguimiento del mundial en tiempo real");
+        JLabel lblSubtitulo = new JLabel(
+                "Seguimiento del mundial en tiempo real"
+        );
         lblSubtitulo.setForeground(new Color(0xD4, 0xE8, 0xD0));
         lblSubtitulo.setFont(new Font("SansSerif", Font.PLAIN, 14));
 
@@ -69,7 +73,9 @@ public class FrmLogin extends JFrame {
         JPanel tarjeta = new JPanel(new GridBagLayout());
         tarjeta.setBackground(PaletaColores.BLANCO);
         tarjeta.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(PaletaColores.BORDE_TARJETA),
+                BorderFactory.createLineBorder(
+                        PaletaColores.BORDE_TARJETA
+                ),
                 BorderFactory.createEmptyBorder(35, 45, 35, 45)
         ));
 
@@ -79,7 +85,10 @@ public class FrmLogin extends JFrame {
         gbc.weightx = 1;
         gbc.insets = new Insets(8, 8, 8, 8);
 
-        JLabel lblTitulo = new JLabel("Iniciar sesión", SwingConstants.CENTER);
+        JLabel lblTitulo = new JLabel(
+                "Iniciar sesión",
+                SwingConstants.CENTER
+        );
         lblTitulo.setFont(new Font("SansSerif", Font.BOLD, 24));
         lblTitulo.setForeground(PaletaColores.VERDE_OSCURO);
 
@@ -94,20 +103,28 @@ public class FrmLogin extends JFrame {
         lblContrasena.setFont(new Font("SansSerif", Font.BOLD, 13));
 
         txtContrasena = new JPasswordField(24);
-        txtContrasena.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        txtContrasena.setFont(
+                new Font("SansSerif", Font.PLAIN, 14)
+        );
         txtContrasena.setPreferredSize(new Dimension(320, 38));
 
         btnIniciarSesion = new JButton("Iniciar sesión");
         btnIniciarSesion.setBackground(PaletaColores.VERDE_CESPED);
         btnIniciarSesion.setForeground(PaletaColores.BLANCO);
         btnIniciarSesion.setFocusPainted(false);
-        btnIniciarSesion.setFont(new Font("SansSerif", Font.BOLD, 14));
+        btnIniciarSesion.setFont(
+                new Font("SansSerif", Font.BOLD, 14)
+        );
         btnIniciarSesion.setPreferredSize(new Dimension(320, 42));
         btnIniciarSesion.addActionListener(e -> iniciarSesion());
 
         JLabel lblAyuda = new JLabel(
-                "<html><center>Usuario de prueba:<br>"
-                + "admin / admin</center></html>",
+                "<html><center>"
+                + "Administrador: admin / admin"
+                + "<br>"
+                + "Corresponsal: corresponsal "
+                + "/ corresponsal"
+                + "</center></html>",
                 SwingConstants.CENTER
         );
         lblAyuda.setForeground(PaletaColores.TEXTO_SECUNDARIO);
@@ -115,17 +132,23 @@ public class FrmLogin extends JFrame {
 
         gbc.gridy = 0;
         tarjeta.add(lblTitulo, gbc);
+
         gbc.gridy = 1;
         tarjeta.add(lblCorreo, gbc);
+
         gbc.gridy = 2;
         tarjeta.add(txtCorreo, gbc);
+
         gbc.gridy = 3;
         tarjeta.add(lblContrasena, gbc);
+
         gbc.gridy = 4;
         tarjeta.add(txtContrasena, gbc);
+
         gbc.gridy = 5;
         gbc.insets = new Insets(18, 8, 8, 8);
         tarjeta.add(btnIniciarSesion, gbc);
+
         gbc.gridy = 6;
         gbc.insets = new Insets(10, 8, 8, 8);
         tarjeta.add(lblAyuda, gbc);
@@ -141,10 +164,12 @@ public class FrmLogin extends JFrame {
 
     private void iniciarSesion() {
         String correo = txtCorreo.getText().trim();
-        String contrasena = new String(txtContrasena.getPassword());
+        String contrasena =
+                new String(txtContrasena.getPassword());
 
         try {
-            Usuario usuario = contexto.getGestorUsuarios()
+            Usuario usuario = contexto
+                    .getGestorUsuarios()
                     .iniciarSesion(correo, contrasena);
 
             abrirVentanaSegunRol(usuario);
@@ -156,6 +181,7 @@ public class FrmLogin extends JFrame {
                     "Credenciales inválidas",
                     JOptionPane.ERROR_MESSAGE
             );
+
             txtContrasena.setText("");
             txtContrasena.requestFocus();
         }
@@ -163,25 +189,30 @@ public class FrmLogin extends JFrame {
 
     private void abrirVentanaSegunRol(Usuario usuario) {
         if (usuario instanceof Administrador administrador) {
-            new FrmDashboardAdministrador(contexto, administrador).setVisible(true);
+            new FrmDashboardAdministrador(
+                    contexto,
+                    administrador
+            ).setVisible(true);
+
             dispose();
             return;
         }
 
-        if (usuario instanceof Corresponsal) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "El módulo del corresponsal se implementará en el siguiente paso.",
-                    "Acceso correcto",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
+        if (usuario instanceof Corresponsal corresponsal) {
+            new FrmPartidosCorresponsal(
+                    contexto,
+                    corresponsal
+            ).setVisible(true);
+
+            dispose();
             return;
         }
 
         if (usuario instanceof Fanatico) {
             JOptionPane.showMessageDialog(
                     this,
-                    "El módulo del fanático se implementará posteriormente.",
+                    "El módulo del fanático se implementará "
+                    + "posteriormente.",
                     "Acceso correcto",
                     JOptionPane.INFORMATION_MESSAGE
             );

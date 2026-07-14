@@ -47,8 +47,8 @@ public final class DatosIniciales {
                 2,
                 "Carlos",
                 "Ramirez",
-                "corresponsal@fidespn.com",
-                "Corresponsal123",
+                "corresponsal",
+                "corresponsal",
                 true,
                 "Cobertura deportiva"
         );
